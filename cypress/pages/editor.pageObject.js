@@ -13,6 +13,6 @@ export default class EditorPageObject {
     cy.get('textarea[placeholder="Write your article (in markdown)"]').type(
       body
     );
-    cy.get('button[type="submit"]').click();
+    cy.get('.btn-primary').click();
   }
 }
