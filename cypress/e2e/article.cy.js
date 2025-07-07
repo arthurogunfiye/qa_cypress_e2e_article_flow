@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import { faker } from '@faker-js/faker';
+import generateUser from '../support/user';
 import ArticlePageObject from '../pages/article.pageObject';
 import ArticleFeedsPageObject from '../pages/articleFeeds.pageObject';
 import EditorPageObject from '../pages/editor.pageObject';
@@ -10,19 +11,18 @@ const articleFeedsPage = new ArticleFeedsPageObject();
 const editorPage = new EditorPageObject();
 
 describe('Conduit', () => {
-  const user = {
-    email: faker.internet.email(),
-    username: faker.string.alpha({ length: 10 }),
-    password: faker.internet.password(),
-    article: {
-      title: faker.lorem.sentence({ min: 3, max: 5 }),
-      description: faker.lorem.sentence(),
-      body: faker.lorem.paragraphs(3)
-    }
-  };
+  let title;
+  let description;
+  let body;
 
-  before(() => {
-    cy.login(user.email, user.username, user.password);
+  beforeEach(() => {
+    const {username, email, password} = generateUser();
+
+    title = faker.lorem.sentence({ min: 3, max: 5 });
+    description = faker.lorem.sentence();
+    body = faker.lorem.paragraphs(3);
+
+    cy.login(email, username, password);
   });
 
   it('should allow user to create an article', () => {
@@ -30,27 +30,26 @@ describe('Conduit', () => {
 
     editorPage.verifyUrl();
     editorPage.fillAndSubmitForm(
-      user.article.title,
-      user.article.description,
-      user.article.body
+      title,
+      description,
+      body
     );
 
-    articlePage.verifyArticleHeader(user.article.title);
-    articlePage.verifyArticleBody(user.article.body);
+    articlePage.verifyArticleHeader(title);
+    articlePage.verifyArticleBody(body);
   });
 
   it('should allow a user to delete an article', () => {
     cy.createArticle(
-      user.article.title,
-      user.article.description,
-      user.article.body
+      title,
+      description,
+      body
     ).then(response => {
       const articleSlug = response.body.article.slug;
-      cy.visit(`/article/${articleSlug}`);
+      cy.visit(`article/${articleSlug}`)});
 
-      articlePage.verifyUrl(articleSlug);
-      articlePage.verifyArticleHeader(user.article.title);
-      articlePage.verifyArticleBody(user.article.body);
+      articlePage.verifyArticleHeader(title);
+      articlePage.verifyArticleBody(body);
 
       articlePage.clickDeleteArticleButton();
 
@@ -62,4 +61,3 @@ describe('Conduit', () => {
       articleFeedsPage.verifyNoArticlesMessage();
     });
   });
-});
