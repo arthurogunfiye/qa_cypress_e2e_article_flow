@@ -57,6 +57,7 @@ describe('Conduit', () => {
         expect(alertMessage).to.eq('Are you sure you want to delete this article?');
       });
       
+      cy.wait(3000);
       articleFeedsPage.verifyYourFeedTab();
       articleFeedsPage.verifyNoArticlesMessage();
     });

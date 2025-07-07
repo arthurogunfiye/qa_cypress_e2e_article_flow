@@ -15,10 +15,4 @@ export default class ArticlePageObject {
       .contains('Delete Article')
       .click();
   }
-
-  assertAlert(alertMessage) {
-    cy.on('window:alert', alert => {
-      expect(alert).to.eq(alertMessage);
-    });
-  }
 }
