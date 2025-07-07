@@ -54,12 +54,11 @@ describe('Conduit', () => {
 
       articlePage.clickDeleteArticleButton();
 
-      cy.on('window:alert', () => {
-        articlePage.assertAlert(
-          'Are you sure you want to delete this article?'
-        );
+      cy.on('window:alert', (alertMessage) => {
+        expect(alertMessage).to.eq('Are you sure you want to delete this article?');
       });
-
+      
+      articleFeedsPage.verifyYourFeedTab();
       articleFeedsPage.verifyNoArticlesMessage();
     });
   });
