@@ -6,7 +6,7 @@ export default class ArticlePageObject {
   }
 
   verifyArticleBody(content) {
-    return cy.get('.article-content > p').should('contain.text', content);
+    return cy.get('.article-content p').should('contain.text', content);
   }
 
   clickDeleteArticleButton() {
